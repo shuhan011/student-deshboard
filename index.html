@@ -50,6 +50,7 @@
     <button class="nav" data-tab="courses">Courses</button>
     <button class="nav" data-tab="results">Results</button>
     <button class="nav" data-tab="profile">Profile</button>
+    <button class="nav" data-tab="students">Students</button>
     <div class="spacer"></div>
     <button class="nav" id="themeBtn">Switch theme</button>
     <button class="nav" id="logoutBtn">Log out</button>
@@ -79,6 +80,25 @@
     <section class="panel" id="tab-results">
       <div class="card"><h3>Semester results</h3>
         <div class="scroll"><table><thead><tr><th>Course</th><th>Credits</th><th>Marks</th><th>Grade</th></tr></thead><tbody id="resultBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="tab-students">
+      <div class="card">
+        <div class="head"><h3>Students</h3><button class="ghost" id="toggleAdd" type="button">Add student</button></div>
+        <form id="addForm" class="addform hidden" novalidate>
+          <div class="field"><label for="aid">Student ID</label><input id="aid" inputmode="numeric" placeholder="e.g. 2024002"></div>
+          <div class="field"><label for="aname">Full name</label><input id="aname" placeholder="e.g. Karim Hossain"></div>
+          <div class="field"><label for="adept">Department</label><input id="adept" placeholder="e.g. Computer Science"></div>
+          <div class="field"><label for="ayear">Year</label>
+            <select id="ayear"><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+          <div class="field"><label for="aemail">Email</label><input id="aemail" type="email" placeholder="name@northfield.edu"></div>
+          <div class="field"><label for="apass">Password</label><input id="apass" type="password" placeholder="At least 6 characters"></div>
+          <div class="full"><div class="error" id="addErr" role="alert"></div>
+            <div class="actions"><button class="btn small" type="submit">Save student</button><button class="ghost" type="button" id="cancelAdd">Cancel</button></div></div>
+        </form>
+        <p class="ok" id="addOk" role="status"></p>
+        <div class="scroll"><table><thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Year</th><th>Email</th><th></th></tr></thead><tbody id="studentBody"></tbody></table></div>
       </div>
     </section>
 

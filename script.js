@@ -21,7 +21,14 @@ const NOTICES = [
   { title:"Web Technologies project submission", when:"Next Monday", tag:"Deadline" }
 ];
 
+// Students added from the dashboard are saved in this browser
+function loadExtra(){ try { return JSON.parse(localStorage.getItem("extraUsers")) || {}; } catch(e){ return {}; } }
+function saveExtra(o){ try { localStorage.setItem("extraUsers", JSON.stringify(o)); } catch(e){} }
+let EXTRA = loadExtra();
+Object.assign(USERS, EXTRA);
+
 // 2) Helpers
+function esc(s){ const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
 const $ = (id) => document.getElementById(id);
 const store = {
   get(){ try { return sessionStorage.getItem("sid"); } catch(e){ return null; } },
@@ -80,7 +87,8 @@ function openDashboard(id){
     `<tr><td>${c.code} · ${c.name}</td><td>${c.credit}</td><td>${c.marks}</td><td><span class="tag">${c.grade}</span></td></tr>`).join("");
 
   $("profileInfo").innerHTML = [["Student ID", id],["Name", u.name],["Department", u.dept],["Year", u.year],["Email", u.email],["Phone", u.phone]]
-    .map(r => `<div class="row"><small>${r[0]}</small><b>${r[1]}</b></div>`).join("");
+    .map(r => `<div class="row"><small>${r[0]}</small><b>${esc(r[1])}</b></div>`).join("");
+  renderStudents();
 }
 
 // 5) Tabs
@@ -93,7 +101,44 @@ document.querySelectorAll(".nav[data-tab]").forEach(btn => {
   });
 });
 
-// 6) Logout & theme
+// 6) Students: list, add, remove
+function renderStudents(){
+  $("studentBody").innerHTML = Object.keys(USERS).map(id => {
+    const u = USERS[id];
+    const del = EXTRA[id] ? `<button class="ghost" data-del="${id}">Remove</button>` : "";
+    return `<tr><td>${esc(id)}</td><td>${esc(u.name)}</td><td>${esc(u.dept)}</td><td>${esc(u.year)}</td><td>${esc(u.email)}</td><td>${del}</td></tr>`;
+  }).join("");
+}
+function addError(m){ $("addErr").textContent = m; }
+function toggleForm(show){
+  $("addForm").classList.toggle("hidden", !show);
+  if (show) { $("addOk").textContent = ""; $("aid").focus(); }
+}
+$("toggleAdd").addEventListener("click", () => toggleForm($("addForm").classList.contains("hidden")));
+$("cancelAdd").addEventListener("click", () => { addError(""); $("addForm").reset(); toggleForm(false); });
+
+$("addForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const id = $("aid").value.trim(), name = $("aname").value.trim(), dept = $("adept").value.trim();
+  const year = $("ayear").value, email = $("aemail").value.trim(), pass = $("apass").value;
+  if (!id || !name || !dept || !email || !pass) return addError("Fill in every field.");
+  if (!/^\d{4,10}$/.test(id)) return addError("Student ID must be 4 to 10 digits.");
+  if (USERS[id]) return addError("This student ID already exists.");
+  if (!/^\S+@\S+\.\S+$/.test(email)) return addError("Enter a valid email address.");
+  if (pass.length < 6) return addError("Password needs at least 6 characters.");
+  const u = { pass, name, dept, year, email, phone:"Not added" };
+  USERS[id] = u; EXTRA[id] = u; saveExtra(EXTRA);
+  addError(""); e.target.reset(); toggleForm(false); renderStudents();
+  $("addOk").textContent = name + " was added. They can now sign in with ID " + id + ".";
+});
+$("studentBody").addEventListener("click", (e) => {
+  const id = e.target.dataset.del;
+  if (!id || !confirm("Remove " + USERS[id].name + "?")) return;
+  delete USERS[id]; delete EXTRA[id]; saveExtra(EXTRA); renderStudents();
+  $("addOk").textContent = "Student removed.";
+});
+
+// 7) Logout & theme
 $("logoutBtn").addEventListener("click", () => {
   store.clear();
   $("appView").classList.add("hidden");
@@ -106,6 +151,6 @@ $("themeBtn").addEventListener("click", () => {
   root.dataset.theme = dark ? "light" : "dark";
 });
 
-// 7) Stay signed in on refresh
+// 8) Stay signed in on refresh
 const saved = store.get();
 if (saved && USERS[saved]) openDashboard(saved);
