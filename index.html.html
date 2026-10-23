@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Portal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HTML: Login ===== -->
+<section class="login" id="loginView">
+  <div class="login-art">
+    <strong>Northfield College</strong>
+    <div>
+      <h1>Your classes, results and notices in one place.</h1>
+      <p>Sign in with your student ID to see today’s schedule and how your courses are going.</p>
+    </div>
+    <small>Academic Session 2026</small>
+  </div>
+  <div class="login-form">
+    <div class="card">
+      <h2>Sign in</h2>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="sid">Student ID</label>
+          <input id="sid" autocomplete="username" inputmode="numeric" placeholder="e.g. 2024001">
+        </div>
+        <div class="field">
+          <label for="pass">Password</label>
+          <div class="pw">
+            <input id="pass" type="password" autocomplete="current-password" placeholder="Enter your password">
+            <button type="button" id="togglePw" aria-label="Show password">Show</button>
+          </div>
+        </div>
+        <div class="error" id="err" role="alert"></div>
+        <button class="btn" type="submit">Sign in</button>
+      </form>
+      <div class="hint">Demo login: ID <b>2024001</b> · Password <b>student123</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HTML: Dashboard ===== -->
+<div class="app hidden" id="appView">
+  <aside class="side">
+    <div class="logo">Northfield</div>
+    <button class="nav active" data-tab="overview">Overview</button>
+    <button class="nav" data-tab="courses">Courses</button>
+    <button class="nav" data-tab="results">Results</button>
+    <button class="nav" data-tab="profile">Profile</button>
+    <div class="spacer"></div>
+    <button class="nav" id="themeBtn">Switch theme</button>
+    <button class="nav" id="logoutBtn">Log out</button>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <h2 id="hello">Hello</h2>
+        <p id="dateLine"></p>
+      </div>
+      <div class="who"><div class="avatar" id="avatar">R</div><div><b id="whoName"></b><small style="display:block;color:var(--muted)" id="whoDept"></small></div></div>
+    </header>
+
+    <section class="panel show" id="tab-overview">
+      <div class="stats" id="stats"></div>
+      <div class="grid">
+        <div class="card"><h3>Today’s classes</h3><div id="schedule"></div></div>
+        <div class="card"><h3>Notices</h3><div id="notices"></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="tab-courses">
+      <div class="card"><h3>Enrolled courses</h3><div id="courseList"></div></div>
+    </section>
+
+    <section class="panel" id="tab-results">
+      <div class="card"><h3>Semester results</h3>
+        <div class="scroll"><table><thead><tr><th>Course</th><th>Credits</th><th>Marks</th><th>Grade</th></tr></thead><tbody id="resultBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="tab-profile">
+      <div class="card"><h3>Profile</h3><div id="profileInfo"></div></div>
+    </section>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
