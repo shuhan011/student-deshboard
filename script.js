@@ -88,7 +88,6 @@ function openDashboard(id){
 
   $("profileInfo").innerHTML = [["Student ID", id],["Name", u.name],["Department", u.dept],["Year", u.year],["Email", u.email],["Phone", u.phone]]
     .map(r => `<div class="row"><small>${r[0]}</small><b>${esc(r[1])}</b></div>`).join("");
-  renderStudents();
 }
 
 // 5) Tabs
@@ -101,21 +100,16 @@ document.querySelectorAll(".nav[data-tab]").forEach(btn => {
   });
 });
 
-// 6) Students: list, add, remove
-function renderStudents(){
-  $("studentBody").innerHTML = Object.keys(USERS).map(id => {
-    const u = USERS[id];
-    const del = EXTRA[id] ? `<button class="ghost" data-del="${id}">Remove</button>` : "";
-    return `<tr><td>${esc(id)}</td><td>${esc(u.name)}</td><td>${esc(u.dept)}</td><td>${esc(u.year)}</td><td>${esc(u.email)}</td><td>${del}</td></tr>`;
-  }).join("");
-}
+// 6) Add student (on the login page, before signing in)
 function addError(m){ $("addErr").textContent = m; }
-function toggleForm(show){
-  $("addForm").classList.toggle("hidden", !show);
-  if (show) { $("addOk").textContent = ""; $("aid").focus(); }
+function showRegister(show){
+  $("loginBox").classList.toggle("hidden", show);
+  $("regBox").classList.toggle("hidden", !show);
+  addError(""); showError("");
+  (show ? $("aid") : $("sid")).focus();
 }
-$("toggleAdd").addEventListener("click", () => toggleForm($("addForm").classList.contains("hidden")));
-$("cancelAdd").addEventListener("click", () => { addError(""); $("addForm").reset(); toggleForm(false); });
+$("showAdd").addEventListener("click", () => { $("regOk").textContent = ""; showRegister(true); });
+$("backToLogin").addEventListener("click", () => showRegister(false));
 
 $("addForm").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -128,14 +122,10 @@ $("addForm").addEventListener("submit", (e) => {
   if (pass.length < 6) return addError("Password needs at least 6 characters.");
   const u = { pass, name, dept, year, email, phone:"Not added" };
   USERS[id] = u; EXTRA[id] = u; saveExtra(EXTRA);
-  addError(""); e.target.reset(); toggleForm(false); renderStudents();
-  $("addOk").textContent = name + " was added. They can now sign in with ID " + id + ".";
-});
-$("studentBody").addEventListener("click", (e) => {
-  const id = e.target.dataset.del;
-  if (!id || !confirm("Remove " + USERS[id].name + "?")) return;
-  delete USERS[id]; delete EXTRA[id]; saveExtra(EXTRA); renderStudents();
-  $("addOk").textContent = "Student removed.";
+  e.target.reset(); showRegister(false);
+  $("sid").value = id;
+  $("regOk").textContent = name + " was added. Enter the password to sign in.";
+  $("pass").focus();
 });
 
 // 7) Logout & theme

@@ -67,15 +67,11 @@ th,td{text-align:left;padding:10px 8px;border-top:1px solid var(--line)}
 th{color:var(--muted);font-weight:500;font-size:.85rem;border-top:0}
 .scroll{overflow-x:auto}
 
-/* Students tab */
-.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
-.head h3{margin:0}
-.addform{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px;padding:6px 16px 16px;margin-bottom:16px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
-.addform .full{grid-column:1/-1}
-.actions{display:flex;gap:10px;align-items:center;margin-top:14px}
-.btn.small{width:auto;margin-top:0;padding:10px 18px}
-.ok{color:var(--brand);font-size:.9rem;margin:0 0 12px}
+/* Add student (login page) */
+.ok{color:var(--brand);font-size:.9rem;margin:10px 0 0}
 .ok:empty{display:none}
+.link{display:block;margin:14px auto 0;background:none;border:0;color:var(--brand);font-weight:600;cursor:pointer;padding:6px}
+.link:hover{text-decoration:underline}
 
 @media (max-width:820px){
   .login{grid-template-columns:1fr}.login-art{padding:28px;gap:24px}
